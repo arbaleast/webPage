@@ -249,8 +249,9 @@ section:first-child.content {
 .start h1 {
     font-family: 'Roboto', sans-serif;
     font-size: 40px;
-    line-height: 100vh;
+    /* line-height: 100vh; */
     color: #111111;
+    margin: 200px auto;
 }
 h2 {
     font-family: 'Roboto', sans-serif;
