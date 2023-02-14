@@ -7,14 +7,6 @@
   box-sizing: border-box;
 }
 
-body {
-  display: grid;
-  place-items: center;
-  min-height: 100vh;
-  font-family: "Google Sans", sans-serif, system-ui;
-  transition: background 0.25s;
-}
-
 .radial {
   --border-width: 12px;
   --diameter: clamp(200px, 30vmin, 28rem);
