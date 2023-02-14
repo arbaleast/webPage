@@ -16,6 +16,7 @@
   display: grid;
   place-items: center;
   position: relative;
+  margin: 20px auto;
 }
 
 .radial__ring {
