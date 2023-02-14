@@ -1,5 +1,5 @@
 @import "https://cdn.jsdelivr.net/npm/open-props@1.5.5/dist/open-props.min.js";
-@import "https://cdn.bootcdn.net/ajax/libs/normalize/8.0.1/normalize.min.css";
+@import "https://cdn.jsdelivr.net/npm/normalize@0.3.1/lib/normalize.js";
 
 *,
 *:after,
