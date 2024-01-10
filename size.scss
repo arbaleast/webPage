@@ -1,0 +1,318 @@
+// sizes
+
+$icon-sizes: (
+	item: (
+		x-sml: 12px,
+		sml: 18px,
+		med: 24px,
+		lrg: 36px
+	),
+	action: (
+		sml: 16px,
+		med: 18px,
+		lrg: 21px,
+		x-lrg: 24px
+	)
+);
+
+@function icon-size($type, $size) {
+	@return map-get($icon-sizes, $type, $size);
+}
+
+$border-radii: (
+	element: 3px,
+	container: 5px
+);
+
+@function border-radius($context: element) {
+	@return map-get($border-radii, $context);
+}
+
+$font-sizes: (
+	sml: 12px,
+	med: 14px,
+	lrg: 16px
+);
+
+@function font-size($context) {
+	@return map-get($font-sizes, $context);
+}
+
+
+
+// transitions
+
+$transition-time: .1s;
+
+@mixin transition($property: 'all', $time: $transition-time) {
+	// will accept multiple properties 'opacity, max-width'
+	@if unitless($time) {
+		$time: $time * $transition-time;
+	}
+	transition: all $time ease-in-out;
+	@if $property != 'all' {
+		transition-property: unquote($property);
+	}
+}
+
+// color
+
+@function ink-color($level: 100) {
+	@return var(--ink-color-#{$level});
+}
+
+
+// base rules
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&display=swap');
+
+:root {
+	--ink-color-0: white;
+	--ink-color-5: #f6f6f7;
+	--ink-color-10: #e9e9ee;
+	--ink-color-15: #d8d8e0;
+	--ink-color-20: #ccccd7;
+	--ink-color-35: #a8a8b9;
+	--ink-color-50: #81819a;
+	--ink-color-60: #6e6e8a;
+	--ink-color-80: #484859;
+	--ink-color-100: #1d1d2d;
+	--ink-color-80-alpha: #1d1d2dcc;
+	--ink-lighter-color: white;
+	--ink-lighter-inactive-color: white;
+	--ink-darker-color: #a8a8b9;
+	--ink-darker-inactive-color: #d8d8e0;
+	
+}
+
+[data-theme='dark'] {
+	--ink-color-0: #1d1d2d;
+	--ink-color-5: #262635;
+	--ink-color-10: #313140;
+	--ink-color-15: #404050;
+	--ink-color-20: #49495c;
+	--ink-color-35: #676780;
+	--ink-color-50: #8b8Ba2;
+	--ink-color-60: #9e9eb2;
+	--ink-color-80: #cfcfd8;
+	--ink-color-100: white;
+	--ink-color-80-alpha: #ffffffcc;
+	--ink-lighter-color: #676780;
+	--ink-lighter-inactive-color: #404050;
+	--ink-darker-color: #1d1d2d;
+	--ink-darker-inactive-color: #1d1d2d;
+}
+
+*, *::before, *::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: barlow;
+	background: ink-color(5);
+	color: ink-color();
+}
+
+svg {
+	fill: currentcolor;
+	stroke: currentcolor;
+	overflow: visible;
+	display: block;
+	
+	&.defs, &[data-prep="true"] {
+		position: absolute;
+		height: 0;
+		width: 0;
+	}
+}
+
+symbol {
+	overflow: visible;
+}
+
+
+// actions
+
+.action-set {
+	stroke-width: 5px;
+	
+	&.segmented {
+		display: flex;
+		position: relative;
+
+		border: 2px solid transparent;
+
+		border-radius: 5px;
+
+		transition: all .1s ease-in-out;
+
+		&::before {
+			// sliding background 
+			content: '';
+			position: absolute;
+			left: 0;
+			height: 100%;
+			aspect-ratio: 1;
+
+			border-radius: 3px;
+			background: ink-color(5);
+			opacity: 0;
+
+			transition: all .25s ease-in-out, opacity .1s ease-in-out;
+		}
+
+		&:hover {
+			background: ink-color(0);
+			&::before {
+				opacity: 1;
+			}
+		}
+
+		input {
+			position: absolute;
+			transform: scale(0); // not 'hidden' for better accessibilty
+
+			&:checked {
+				+ label {
+					color: ink-color();
+
+					svg {
+						fill: ink-color(0);
+					}
+				}
+			}
+			
+			&:not(:checked) {
+				&:hover + label {
+					color: ink-color(80);
+				}
+				+ label {
+					cursor: pointer;
+					&:active {
+						svg {
+							stroke-width: 7px;
+						}
+					}
+				}
+			}
+		}
+
+		label {
+			display: grid;
+			justify-items: center;
+			padding: 5px;
+
+			border-radius: 3px;
+			color: ink-color(35);
+
+			transition: all .1s ease-in-out;
+
+			svg {
+				height: 18px;
+				aspect-ratio: 1;
+				fill: transparent;
+			}
+		}
+
+		&:has(input:nth-of-type(2):checked) {
+			&::before {
+				transform: translatex(100%);
+			}
+		}
+
+	}
+	
+}
+
+
+
+// tooltips
+
+$tooltip-pos-data: (
+	'bottom': (
+		absolute-from: top,
+		justification: center,
+		alignment: start,
+		transform-origin: 'top center'
+	),
+	'bottom-left': (
+		absolute-from: top,
+		justification: start,
+		alignment: start,
+		transform-origin: 'top left'
+	),
+	'bottom-right': (
+		absolute-from: top,
+		justification: end,
+		alignment: start,
+		transform-origin: 'top right'
+	),
+	'top': (
+		absolute-from: bottom,
+		justification: center,
+		alignment: end,
+		transform-origin: 'bottom center'
+	)
+);
+	
+@mixin tooltip-anchor($position) {
+	&::after {
+		top: auto;
+		bottom: auto;
+		left: auto;
+		right: auto;
+		#{map-get($tooltip-pos-data, $position, absolute-from)}: 100%;
+		justify-self: #{map-get($tooltip-pos-data, $position, justification)};
+		align-self: #{map-get($tooltip-pos-data, $position, alignment)};
+		transform-origin: #{map-get($tooltip-pos-data, $position, transform-origin)};
+		
+		@if $position == 'left' or $position == 'right' {
+			margin-inline: 0;
+		}
+	}
+
+	
+}
+
+[data-tooltip]:not([data-tooltip='']) {
+	position: relative;
+	
+	&::after {
+		content: attr(data-tooltip);
+		
+		position: absolute;
+		margin-block: 6px;
+		border-radius: 3px;
+		margin-inline: -8px;
+		height: 24px;
+		padding: 4px 7px;
+		z-index: 1;
+		
+		font-size: 13.5px;
+		font-weight: 400;
+		line-height: 14.5px;
+		white-space: nowrap;
+		opacity: 0;
+		background-color: ink-color(80-alpha);
+		color: ink-color(0);
+		-webkit-text-fill-color: currentcolor;
+		backdrop-filter: blur(1.5px);
+		-webkit-backdrop-filter: blur(1.5px);
+
+		pointer-events: none;
+		transition: all 0.1s ease-in-out;
+		transform: scale(0);
+	}
+	@include tooltip-anchor(bottom);
+	
+	&:hover::after {
+		opacity: 1;
+		transition-delay: .25s;
+		transform: scale(1);
+	}
+}
+
+
+	
